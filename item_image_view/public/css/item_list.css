@@ -1,0 +1,11 @@
+/* Only affect Item list view */
+
+body[data-route="List/Item/List"] .list-row .level-left .list-row-image {
+    width: 120px !important;
+    height: 120px !important;
+    object-fit: contain !important;
+}
+
+body[data-route="List/Item/List"] .list-row {
+    min-height: 130px !important;
+}

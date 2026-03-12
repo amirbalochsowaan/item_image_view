@@ -5,6 +5,18 @@ app_description = "Show Price and Available Quantity on Item Image View"
 app_email = "amir.baloch@ahwaal.com"
 app_license = "mit"
 
+
+fixtures = [
+    {
+        "doctype": "Custom Field",
+        "filters": {
+            "module": "Item Image View"
+        }
+    },
+
+]
+
+
 # Apps
 # ------------------
 
@@ -25,9 +37,9 @@ app_license = "mit"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/item_image_view/css/item_image_view.css"
+app_include_css = "/assets/item_image_view/css/item_list.css"
 # app_include_js = "/assets/item_image_view/js/item_image_view.js"
-
+# app_include_js = "/assets/item_image_view/js/item_list.js"
 # include js, css files in header of web template
 # web_include_css = "/assets/item_image_view/css/item_image_view.css"
 # web_include_js = "/assets/item_image_view/js/item_image_view.js"
@@ -37,7 +49,7 @@ app_license = "mit"
 
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
-# webform_include_css = {"doctype": "public/css/doctype.css"}
+webform_include_css = {"Item": "public/css/item_list.css"}
 
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
@@ -45,6 +57,9 @@ app_license = "mit"
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+doctype_list_js = {
+    "Item": "public/js/item_list.js"
+}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -137,6 +152,21 @@ app_license = "mit"
 # ---------------
 # Hook on document methods and events
 
+doc_events = {
+
+    # "Bin": {
+    #     "after_insert": "item_image_view.utils.stock_utils.bin_after_save",
+    #     "on_update": "item_image_view.utils.stock_utils.bin_after_save",
+    # },
+    "Stock Ledger Entry": {
+        "after_insert": "item_image_view.utils.stock_utils.sle_after_insert"
+    },
+    "Item Price": {
+        "after_insert": "item_image_view.utils.stock_utils.item_price_after_save",
+        "on_update": "item_image_view.utils.stock_utils.item_price_after_save",
+    }
+
+}
 # doc_events = {
 # 	"*": {
 # 		"on_update": "method",
@@ -147,7 +177,11 @@ app_license = "mit"
 
 # Scheduled Tasks
 # ---------------
-
+scheduler_events = {
+    "daily": [
+        "item_image_view.utils.stock_utils.daily_item_sync"
+    ]
+}
 # scheduler_events = {
 # 	"all": [
 # 		"item_image_view.tasks.all"
