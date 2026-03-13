@@ -71,12 +71,17 @@ def daily_item_sync():
 
     try:
 
+        # stock map
         qty_map = frappe.db.sql("""
             SELECT item_code, SUM(actual_qty) as qty
             FROM `tabBin`
             GROUP BY item_code
         """, as_dict=True)
 
+        qty_lookup = {q.item_code: q.qty for q in qty_map}
+
+
+        # price map
         price_map = frappe.db.sql("""
             SELECT item_code, MAX(price_list_rate) as price
             FROM `tabItem Price`
@@ -86,17 +91,25 @@ def daily_item_sync():
 
         price_lookup = {p.item_code: p.price for p in price_map}
 
-        for row in qty_map:
+
+        # get ALL items
+        items = frappe.get_all("Item", pluck="name")
+
+        frappe.logger().info(f"Daily Item Sync started for {len(items)} items")
+
+
+        for item in items:
 
             frappe.db.set_value(
                 "Item",
-                row.item_code,
+                item,
                 {
-                    "custom_available_quantity": row.qty or 0,
-                    "custom_selling_price": price_lookup.get(row.item_code, 0),
+                    "custom_available_quantity": qty_lookup.get(item, 0),
+                    "custom_selling_price": price_lookup.get(item, 0),
                 },
                 update_modified=False
             )
+
 
     except Exception:
         frappe.log_error(
