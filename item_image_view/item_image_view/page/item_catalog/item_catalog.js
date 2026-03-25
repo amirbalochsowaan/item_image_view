@@ -186,6 +186,17 @@ function render_items(page, items){
         let image = item.image || "/assets/frappe/images/fallback-thumbnail.jpg";
         let price = format_currency(item.custom_selling_price || 0);
         let qty = item.custom_available_quantity || 0;
+let ordered = item.ordered_qty || 0;
+
+let ordered_color = "#27ae60"; // green
+let ordered_text = `Incoming: ${ordered}`;
+
+if(ordered == 0 && qty <= 0){
+    ordered_color = "#e74c3c"; // red
+}
+else if(ordered == 0){
+    ordered_color = "#f39c12"; // orange
+}
 
         let stock_color = "#e74c3c";
         let stock_text = "Out of Stock";
@@ -199,37 +210,43 @@ function render_items(page, items){
             stock_text = "Low Stock";
         }
 
-        html += `
-        <div class="catalog-card"
-             onclick="frappe.set_route('Form','Item','${item.name}')">
+html += `
+<div class="catalog-card"
+     onclick="frappe.set_route('Form','Item','${item.name}')">
 
-            <div class="catalog-image">
-                <img src="${image}">
-            </div>
+    <div class="catalog-image">
+        <img src="${image}">
+    </div>
 
-            <div class="catalog-body">
+    <div class="catalog-body">
 
-                <div class="catalog-title">
-                    ${item.item_name}
-                </div>
-
-                <div class="catalog-brand">
-                    ${item.brand || ""}
-                </div>
-
-                <div class="catalog-price">
-                    ${price}
-                </div>
-
-                <div class="catalog-stock"
-                     style="background:${stock_color}">
-                    ${stock_text} (${qty})
-                </div>
-
-            </div>
-
+        <div class="catalog-title">
+            ${item.item_name}
         </div>
-        `;
+
+        <div class="catalog-brand">
+            ${item.brand || ""}
+        </div>
+
+        <div class="catalog-price">
+            ${price}
+        </div>
+
+        <div class="catalog-stock"
+             style="background:${stock_color}">
+            ${stock_text} (${qty})
+        </div>
+
+<div class="catalog-ordered"
+     style="color:${ordered_color}">
+    ${ordered_text}
+</div>
+
+
+    </div>
+
+</div>
+`;
     });
 
     $(".catalog-grid").append(html);
