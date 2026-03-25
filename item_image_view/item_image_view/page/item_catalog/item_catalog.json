@@ -7,9 +7,9 @@
  "modified": "2026-03-12 15:54:22.109361",
  "modified_by": "Administrator",
  "module": "Item Image View",
- "name": "tem-catalog",
+ "name": "item-catalog",
  "owner": "Administrator",
- "page_name": "tem-catalog",
+ "page_name": "item-catalog",
  "roles": [
   {
    "role": "Stock Manager"
